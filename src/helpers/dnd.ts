@@ -1,6 +1,6 @@
 import { Mediator } from './mediator';
 import createDropShadow, { dropAreaA, dropAreaB } from './shadow';
-import { getAreasDistance, canDrop, px, setNodeStyle, translate3d } from './utils';
+import { getTargetDistance, canDrop, px, setNodeStyle, translate3d } from './utils';
 
 let cachedOffsetCoords: number[];
 let cachedDragImage: HTMLElement;
@@ -10,8 +10,8 @@ let dropShadow: HTMLElement;
 let dropArea: HTMLElement;
 
 const reset = (mediator: Mediator) => {
-    document.removeEventListener('mousemove', mediator.receive);
-    document.removeEventListener('mouseup', mediator.receive);
+    document.removeEventListener('mousemove', dndReceive);
+    document.removeEventListener('mouseup', dndReceive);
     cachedCurrentTarget.removeEventListener('transitionend', dndReceive);
     mediator.setState('idle');
 };
@@ -36,13 +36,17 @@ const mousemove = (evt: MouseEvent) => {
 };
 
 const mouseup = (evt: MouseEvent) => {
-    if (canDrop(dropArea, [evt.clientX, evt.clientY])) {
+    const mousePosition = [evt.clientX, evt.clientY];
+    const dropAreaRect = dropArea.getBoundingClientRect();
+
+    if (canDrop(dropAreaRect, mousePosition)) {
         dropArea.appendChild(cachedCurrentTarget);
         dropArea.removeChild(dropShadow);
     }
 
     const rect = cachedCurrentTarget.getBoundingClientRect();
-    const dist = getAreasDistance([evt.clientX, evt.clientY], [rect.left, rect.top]);
+    const targetPosition = [rect.left, rect.top];
+    const dist = getTargetDistance(mousePosition, targetPosition);
 
     document.body.removeChild(cachedDragImage);
     const currentRect = cachedCurrentTarget.getBoundingClientRect();
@@ -59,7 +63,7 @@ const mouseup = (evt: MouseEvent) => {
         setNodeStyle(cachedCurrentTarget, {
             transform: translate3d(),
             opacity: 1,
-            transition: `transform ${dist * 0.5}ms ease-in-out, opacity 200ms`,
+            transition: `transform ${dist * 0.5}ms ease-out`,
         });
     });
 
@@ -67,7 +71,7 @@ const mouseup = (evt: MouseEvent) => {
     dropArea.removeEventListener('mouseenter', dndReceive);
     dropArea.removeEventListener('mouseleave', dndReceive);
 
-    dndMediator.setState('transitioning');
+    dndMediator.setState('releasing');
 };
 
 const mousedown = async (evt: MouseEvent) => {
@@ -114,6 +118,15 @@ const mouseleave = async () => {
     dropArea.removeChild(dropShadow);
 };
 
+const transitionend = () => {
+    reset(dndMediator);
+    setNodeStyle(cachedCurrentTarget, {
+        transition: 'none',
+    });
+
+    dndMediator.setState('idle');
+};
+
 const dndMediator = new Mediator('idle', {
     idle: {
         mousedown,
@@ -124,15 +137,8 @@ const dndMediator = new Mediator('idle', {
         mouseenter,
         mouseleave,
     },
-    transitioning: {
-        transitionend() {
-            reset(dndMediator);
-            setNodeStyle(cachedCurrentTarget, {
-                transition: 'none',
-            });
-
-            dndMediator.setState('idle');
-        },
+    releasing: {
+        transitionend,
     },
 });
 

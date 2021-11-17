@@ -56,9 +56,9 @@ export const translate3d = (x = 0, y = 0, z = 0) => {
     return `translate3d(${px(x)}, ${px(y)}, ${px(z)})`;
 };
 
-export const getAreasDistance = (areaA: number[], areaB: number[]) => {
-    const [ax, ay] = areaA;
-    const [bx, by] = areaB;
+export const getTargetDistance = (mousePosition: number[], targetPosition: number[]) => {
+    const [ax, ay] = mousePosition;
+    const [bx, by] = targetPosition;
 
     const dy = by - ay;
     const dx = bx - ax;
@@ -66,8 +66,7 @@ export const getAreasDistance = (areaA: number[], areaB: number[]) => {
     return Math.sqrt(dy * dy + dx * dx);
 };
 
-export const canDrop = (domNode: Element, position: number[]) => {
-    const domRect = domNode.getBoundingClientRect();
+export const canDrop = (domRect: DOMRect, position: number[]) => {
     const [posX, posY] = position;
 
     return (
