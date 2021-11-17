@@ -1,5 +1,9 @@
 # Toggl Plan Take Home Project
 
+## Deployed Project
+
+http://sigmacool.surge.sh/
+
 ## The Mission
 
 Hello there future Toggl Plan Frontend Developer 👋 Your mission, should you choose to accept it, is to add drop functionality to this template:
