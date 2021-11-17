@@ -6,13 +6,13 @@ let cachedOffsetCoords: number[];
 let cachedDragImage: HTMLElement;
 let cachedCurrentTarget: HTMLElement;
 
-let dropShadow: Element;
-let dropArea: Element;
+let dropShadow: HTMLElement;
+let dropArea: HTMLElement;
 
 const reset = (mediator: Mediator) => {
     document.removeEventListener('mousemove', mediator.receive);
     document.removeEventListener('mouseup', mediator.receive);
-    cachedCurrentTarget.removeEventListener('transitionend', () => mediator.receive);
+    cachedCurrentTarget.removeEventListener('transitionend', dndReceive);
     mediator.setState('idle');
 };
 
