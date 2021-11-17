@@ -1,4 +1,4 @@
-import { IUnknownObject } from './interfaces';
+import { IUnknownObject } from './../interfaces';
 
 export class Mediator {
     #state;

@@ -1,14 +1,14 @@
 import './style.css';
-import { createDOMNode } from './utils';
-import { onDrag } from './dnd';
+import { createDOMNode } from './helpers/utils';
+import { onDrag } from './helpers/dnd';
 
 const dragme = createDOMNode(
     'div',
     {
         onmousedown: onDrag,
-        className: 'p-2 bg-indigo-500 text-white rounded-md',
+        className: 'p-4 bg-indigo-800 text-white rounded-md shadow cursor-move',
     },
-    'Drag me',
+    'Click to Drag',
 );
 
 document?.querySelector('#drop-area-a')?.appendChild(dragme);
