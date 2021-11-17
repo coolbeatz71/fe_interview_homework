@@ -1,7 +1,7 @@
 import { createDOMNode } from './utils';
 
-export const dropAreaA = document.querySelector('#drop-area-a') as Element;
-export const dropAreaB = document.querySelector('#drop-area-b') as Element;
+export const dropAreaA = document.querySelector('#drop-area-a') as HTMLElement;
+export const dropAreaB = document.querySelector('#drop-area-b') as HTMLElement;
 
 const createDropShadow = () =>
     createDOMNode(
