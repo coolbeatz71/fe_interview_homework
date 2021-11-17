@@ -1,4 +1,4 @@
-import { IUnknownObject } from "./interfaces";
+import { IUnknownObject } from '../interfaces';
 
 export const isNil = (value: any) => value === null || value === undefined;
 
@@ -8,7 +8,7 @@ const createElement = (tag: string) => {
         : document.createElement(tag);
 };
 
-export const setNodeStyle = (node: SVGElement | HTMLElement, style: IUnknownObject  = {}) => {
+export const setNodeStyle = (node: SVGElement | HTMLElement, style: IUnknownObject = {}) => {
     for (const prop in style) {
         //@ts-ignore
         node.style[prop] = style[prop];
@@ -54,4 +54,26 @@ export const px = (value: number) => unit(value, 'px');
 
 export const translate3d = (x = 0, y = 0, z = 0) => {
     return `translate3d(${px(x)}, ${px(y)}, ${px(z)})`;
+};
+
+export const getAreasDistance = (areaA: number[], areaB: number[]) => {
+    const [ax, ay] = areaA;
+    const [bx, by] = areaB;
+
+    const dy = by - ay;
+    const dx = bx - ax;
+
+    return Math.sqrt(dy * dy + dx * dx);
+};
+
+export const canDrop = (domNode: Element, position: number[]) => {
+    const domRect = domNode.getBoundingClientRect();
+    const [posX, posY] = position;
+
+    return (
+        posX >= domRect.left &&
+        posX <= domRect.left + domRect.width &&
+        posY >= domRect.top &&
+        posY <= domRect.top + domRect.height
+    );
 };
